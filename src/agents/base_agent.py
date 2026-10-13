@@ -34,6 +34,13 @@ class BaseAgent(nn.Module):
 
         if lora_config is not None:
             self.policy_model = self._wrap_lora(self.policy_model, lora_config, use_8bit)
+            # Trade ~30% step time for a large cut in training-activation
+            # memory (required to fit 1.5B + group_size=8 + 384-token long-CoT
+            # on a single 15 GB T4). Only affects training-mode forwards with
+            # grad enabled; no-grad rollout/eval forwards are untouched.
+            self.policy_model.gradient_checkpointing_enable(
+                gradient_checkpointing_kwargs={"use_reentrant": False})
+            self.policy_model.enable_input_require_grads()
 
         self.policy_model.to(self.device)
         self.policy_model.eval()

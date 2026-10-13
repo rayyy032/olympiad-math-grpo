@@ -1,0 +1,12 @@
+{
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "dataset": "gsm8k",
+  "eval_samples": 100,
+  "seed": 42,
+  "accuracy": 0.21,
+  "format_rate": 0.34,
+  "per_source": {
+    "gsm8k": 0.21
+  },
+  "pass@8": 0.48
+}
